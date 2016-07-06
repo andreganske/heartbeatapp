@@ -1,0 +1,14 @@
+<resources>
+
+    <string name="app_name">Heartbeat History</string>
+    <string name="action_settings">Configurações</string>
+
+    <string name="button_send">Enviar</string>
+    <string name="button_save">Salvar</string>
+
+    <string name="systolic_label">Sistólica</string>
+    <string name="diastolic_label">Diastólica</string>
+
+    <string name="history">Histórico</string>
+
+</resources>
