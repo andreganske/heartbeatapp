@@ -45,8 +45,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
 
+    @Override
+    protected void onPostResume() {
         updateUI();
+        super.onPostResume();
     }
 
     @Override
