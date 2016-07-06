@@ -2,6 +2,7 @@ package com.andreganske.heartbeat;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,19 +51,19 @@ public class HeartbeatAdapter extends ArrayAdapter<Heartbeat> {
             TextView classification = (TextView) view.findViewById(R.id.heartbeat_classification);
 
             if (item.getSystolic() < 120 && item.getDiastolic() < 80) {
-                view.setBackgroundColor(Color.GREEN);
+                classification.setTextColor(ContextCompat.getColor(getContext(), R.color.greenLight));
                 classification.setText("Normal");
             } else if (item.getSystolic() < 139 && item.getDiastolic() < 89) {
-                view.setBackgroundColor(Color.GREEN);
+                classification.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
                 classification.setText("Pré-hipertensão");
             } else if (item.getSystolic() < 159 && item.getDiastolic() < 99) {
-                view.setBackgroundColor(Color.YELLOW);
+                classification.setTextColor(ContextCompat.getColor(getContext(), R.color.amber));
                 classification.setText("Hipertensão nível 1");
             } else if (item.getSystolic() < 179 && item.getDiastolic() < 110) {
-                view.setBackgroundColor(Color.YELLOW);
+                classification.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAccentLight));
                 classification.setText("Hipertensão nível 2");
             } else {
-                view.setBackgroundColor(Color.RED);
+                classification.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAccentDark));
                 classification.setText("Crise hipertensíva!");
             }
         }

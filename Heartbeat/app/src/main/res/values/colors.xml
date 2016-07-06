@@ -13,4 +13,8 @@
     <color name="greenDark">#388E3C</color>
     <color name="greenLight">#81C784</color>
 
+    <color name="amber">#FFC107</color>
+    <color name="amberDark">#FFA000</color>
+    <color name="amberLight">#FFD54F</color>
+
 </resources>
