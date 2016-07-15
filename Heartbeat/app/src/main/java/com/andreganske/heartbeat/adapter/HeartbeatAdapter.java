@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.andreganske.heartbeat.R;
@@ -20,6 +21,8 @@ import java.util.List;
 public class HeartbeatAdapter extends ArrayAdapter<Heartbeat> {
 
     private SparseBooleanArray mSelectedItemsIds;
+    private int mSelectedItemId;
+
     private LayoutInflater inflater;
     private Context mContext;
     private List<Heartbeat> heartbeats;
@@ -82,6 +85,16 @@ public class HeartbeatAdapter extends ArrayAdapter<Heartbeat> {
                 classification.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAccentDark));
                 classification.setText("Crise hipertensíva!");
             }
+
+            ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
+
+            if (mSelectedItemsIds.get(position)) {
+                view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.greyLight));
+                imageView.setImageResource(R.drawable.check);
+            } else {
+                view.setBackgroundColor(0);
+                imageView.setImageResource(R.drawable.chevron_right);
+            }
         }
 
         return view;
@@ -94,6 +107,7 @@ public class HeartbeatAdapter extends ArrayAdapter<Heartbeat> {
     public void selectView(int position, boolean value) {
         if (value) {
             mSelectedItemsIds.put(position, value);
+
         } else {
             mSelectedItemsIds.delete(position);
         }
@@ -106,5 +120,9 @@ public class HeartbeatAdapter extends ArrayAdapter<Heartbeat> {
 
     public void resetSelectedIds() {
         mSelectedItemsIds = new SparseBooleanArray();
+    }
+
+    public void setSelectedItemId(int position) {
+        this.mSelectedItemId = position;
     }
 }

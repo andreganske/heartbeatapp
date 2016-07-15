@@ -44,7 +44,9 @@ public class MainActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
                 mTaskListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+
                 mTaskListView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+
                     @Override
                     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
                         mode.setTitle(String.valueOf(mTaskListView.getCheckedItemCount()));
