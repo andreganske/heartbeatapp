@@ -1,7 +1,12 @@
 package com.andreganske.heartbeat.db;
 
+import android.util.Log;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Andre on 04/07/2016.
@@ -66,6 +71,15 @@ public class Heartbeat {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Map<String, String> getDateAndTime() {
+        Map<String, String> map = new HashMap<>();
+
+        map.put("date", this.getCreatedAt().trim().substring(0, 10));
+        map.put("time", this.getCreatedAt().trim().substring(10));
+
+        return map;
     }
 
     @Override

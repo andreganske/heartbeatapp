@@ -7,10 +7,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.andreganske.heartbeat.db.Heartbeat;
 import com.andreganske.heartbeat.db.HeartbeatDBHelper;
 import com.andreganske.heartbeat.R;
+
+import java.util.Map;
 
 public class HeartbeatActivity extends AppCompatActivity {
 
@@ -62,6 +65,13 @@ public class HeartbeatActivity extends AppCompatActivity {
             EditText diastolic = (EditText) findViewById(R.id.diastolic_value);
             diastolic.setText(mHeartbeat.getDiastolic().toString());
 
+            Map<String, String> map = mHeartbeat.getDateAndTime();
+
+            TextView date = (TextView) findViewById(R.id.heartbeat_created_at_date);
+            date.setText(map.get("date"));
+
+            TextView time = (TextView) findViewById(R.id.heartbeat_created_at_time);
+            time.setText(map.get("time"));
         }
     }
 }
