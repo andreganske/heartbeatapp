@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.andreganske.heartbeat.db.Heartbeat;
 import com.andreganske.heartbeat.adapter.HeartbeatAdapter;
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     protected static HeartbeatDBHelper mHelper;
     private HeartbeatAdapter mAdapter;
 
-    private ListView mTaskListView;
+    protected ListView mTaskListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         mTaskListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
                 mTaskListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 
@@ -71,7 +72,18 @@ public class MainActivity extends AppCompatActivity {
 
                         if (item.getItemId() == R.id.menu_edit) {
 
+                            if (selected.size() != 1) {
+                                Toast.makeText(MainActivity.this, "Selecione apenas um registro para editar", Toast.LENGTH_SHORT).show();
+                                return true;
+                            }
+
                             Log.d(TAG, "item " + mAdapter.getItem(selected.keyAt(0)).toString() + " to edit!");
+
+                            Intent intent = new Intent(mTaskListView.getContext(), HeartbeatActivity.class);
+                            intent.putExtra("id", mAdapter.getItem(selected.keyAt(0)).getId());
+                            mTaskListView.getContext().startActivity(intent);
+                            mode.finish();
+                            return true;
 
                         } else if (item.getItemId() == R.id.menu_delete) {
 
@@ -85,8 +97,8 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                             HeartbeatDBHelper.remove(mHelper.getReadableDatabase(), heartbeats);
-
                             mode.finish();
+
                             return true;
                         }
                         return false;

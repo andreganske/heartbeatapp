@@ -17,13 +17,19 @@ public class Heartbeat {
 
     private SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
+    public Heartbeat () {
+        super();
+    }
+
     public Heartbeat(Integer systolic, Integer diastolic) {
+        super();
         this.systolic = systolic;
         this.diastolic = diastolic;
         this.createdAt = formatter.format(new Date());
     }
 
     public Heartbeat(Integer id, Integer systolic, Integer diastolic, String createdAt) {
+        super();
         this.id = id;
         this.diastolic = diastolic;
         this.systolic = systolic;
@@ -44,6 +50,22 @@ public class Heartbeat {
 
     public String getCreatedAt() {
         return createdAt;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setSystolic(Integer systolic) {
+        this.systolic = systolic;
+    }
+
+    public void setDiastolic(Integer diastolic) {
+        this.diastolic = diastolic;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Override

@@ -51,16 +51,17 @@ public class HeartbeatDBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public static void update(SQLiteDatabase db, int id, Heartbeat heartbeat) {
+    public static void update(SQLiteDatabase db, Heartbeat heartbeat) {
         ContentValues values = new ContentValues();
 
         values.put(HeartbeatContract.HeartbeatEntry.COL_HEARTBEAT_SYSTOLIC, heartbeat.getSystolic());
         values.put(HeartbeatContract.HeartbeatEntry.COL_HEARTBEAT_DIASTOLIC, heartbeat.getDiastolic());
         values.put(HeartbeatContract.HeartbeatEntry.COL_HEARTBEAT_CREATED_AT, heartbeat.getCreatedAt());
 
-        db.update(HeartbeatContract.HeartbeatEntry.TABLE, values,
+        db.updateWithOnConflict(HeartbeatContract.HeartbeatEntry.TABLE, values,
                 HeartbeatContract.HeartbeatEntry._ID + "=?",
-                new String[]{heartbeat.getId().toString()});
+                new String[]{heartbeat.getId().toString()},
+                SQLiteDatabase.CONFLICT_REPLACE);
         db.close();
 
         Log.d(TAG, "Heartbeat " + heartbeat.toString() + " updated!");
@@ -78,6 +79,35 @@ public class HeartbeatDBHelper extends SQLiteOpenHelper {
                 HeartbeatContract.HeartbeatEntry._ID + "=?",
                 new String[]{heartbeat.getId().toString()});
         Log.d(TAG, "Heartbeat " + heartbeat.toString() + " deleted!");
+    }
+
+    public static Heartbeat findById(SQLiteDatabase db, int id) {
+        Heartbeat heartbeat = new Heartbeat();
+
+        Cursor cursor = db.query(HeartbeatContract.HeartbeatEntry.TABLE,
+                new String[]{
+                        HeartbeatContract.HeartbeatEntry._ID,
+                        HeartbeatContract.HeartbeatEntry.COL_HEARTBEAT_SYSTOLIC,
+                        HeartbeatContract.HeartbeatEntry.COL_HEARTBEAT_DIASTOLIC,
+                        HeartbeatContract.HeartbeatEntry.COL_HEARTBEAT_CREATED_AT,
+                },
+                HeartbeatContract.HeartbeatEntry._ID + "=?",
+                new String[] {String.valueOf(id)},
+                null, null, null);
+
+        while (cursor.moveToNext()) {
+            heartbeat.setId(cursor.getInt(cursor.getColumnIndex(HeartbeatContract.HeartbeatEntry._ID)));
+            heartbeat.setSystolic(cursor.getInt(cursor.getColumnIndex(HeartbeatContract.HeartbeatEntry.COL_HEARTBEAT_SYSTOLIC)));
+            heartbeat.setDiastolic(cursor.getInt(cursor.getColumnIndex(HeartbeatContract.HeartbeatEntry.COL_HEARTBEAT_DIASTOLIC)));
+            heartbeat.setCreatedAt(cursor.getString(cursor.getColumnIndex(HeartbeatContract.HeartbeatEntry.COL_HEARTBEAT_CREATED_AT)));
+
+            Log.d(TAG, "Heartbeat " + heartbeat.toString() + " recovered!");
+        }
+
+        cursor.close();
+        db.close();
+
+        return heartbeat;
     }
 
     public static List<Heartbeat> fetchAllTasks(SQLiteDatabase db) {
