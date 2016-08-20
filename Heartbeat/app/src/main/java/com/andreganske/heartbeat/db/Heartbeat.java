@@ -82,6 +82,17 @@ public class Heartbeat {
         return map;
     }
 
+    public void setTime(int hourOfDay, int minute) {
+        String date = getCreatedAt().trim().substring(0,10);
+        date.concat(" " + hourOfDay + ":" + minute);
+        this.createdAt = date;
+    }
+
+    public void setDate(int year, int month, int day) {
+        String time = getCreatedAt().trim().substring(10);
+        this.createdAt = (day + "/" + month + "/" + year + " " + time);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

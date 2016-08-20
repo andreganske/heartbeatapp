@@ -1,21 +1,23 @@
 package com.andreganske.heartbeat.activities;
 
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.andreganske.heartbeat.R;
+import com.andreganske.heartbeat.TimePickerFragment;
 import com.andreganske.heartbeat.db.Heartbeat;
 import com.andreganske.heartbeat.db.HeartbeatDBHelper;
-import com.andreganske.heartbeat.R;
 
 import java.util.Map;
 
-public class HeartbeatActivity extends AppCompatActivity {
+public class HeartbeatActivity extends Activity implements TimePickerFragment.OnTimePickerListener {
 
     private static final String TAG = "HeartbeatActivity";
 
@@ -35,20 +37,15 @@ public class HeartbeatActivity extends AppCompatActivity {
                 EditText diastolic = (EditText) findViewById(R.id.diastolic_value);
 
                 if (mHeartbeat != null) {
-
                     mHeartbeat.setSystolic(Integer.parseInt(systolic.getText().toString()));
                     mHeartbeat.setDiastolic(Integer.parseInt(diastolic.getText().toString()));
-
                     HeartbeatDBHelper.update(MainActivity.mHelper.getWritableDatabase(), mHeartbeat);
-
                 } else {
                     mHeartbeat = new Heartbeat(
                             Integer.parseInt(systolic.getText().toString()),
                             Integer.parseInt(diastolic.getText().toString()));
-
                     HeartbeatDBHelper.insert(MainActivity.mHelper.getWritableDatabase(), mHeartbeat);
                 }
-
                 finish();
             }
         });
@@ -58,20 +55,40 @@ public class HeartbeatActivity extends AppCompatActivity {
         if (extras != null) {
             int id = extras.getInt("id");
             mHeartbeat = HeartbeatDBHelper.findById(MainActivity.mHelper.getReadableDatabase(), id);
-
-            EditText systolic = (EditText) findViewById(R.id.systolic_value);
-            systolic.setText(mHeartbeat.getSystolic().toString());
-
-            EditText diastolic = (EditText) findViewById(R.id.diastolic_value);
-            diastolic.setText(mHeartbeat.getDiastolic().toString());
-
-            Map<String, String> map = mHeartbeat.getDateAndTime();
-
-            TextView date = (TextView) findViewById(R.id.heartbeat_created_at_date);
-            date.setText(map.get("date"));
-
-            TextView time = (TextView) findViewById(R.id.heartbeat_created_at_time);
-            time.setText(map.get("time"));
+            updateUI();
         }
     }
+
+    private void updateUI() {
+        EditText systolic = (EditText) findViewById(R.id.systolic_value);
+        systolic.setText(mHeartbeat.getSystolic().toString());
+
+        EditText diastolic = (EditText) findViewById(R.id.diastolic_value);
+        diastolic.setText(mHeartbeat.getDiastolic().toString());
+
+        Map<String, String> map = mHeartbeat.getDateAndTime();
+
+        TextView date = (TextView) findViewById(R.id.heartbeat_created_at_date);
+        date.setText(map.get("date"));
+
+        TextView time = (TextView) findViewById(R.id.heartbeat_created_at_time);
+        time.setText(map.get("time"));
+    }
+
+    public void showTimerDialog(View view) {
+        DialogFragment dialogFragment = new TimePickerFragment();
+        dialogFragment.show(getSupportFragmentManager(), "timePicker");
+    }
+
+    @Override
+    public void onTimePickerSubmit(int hourOfDay, int minute) {
+        mHeartbeat.setTime(hourOfDay, minute);
+        updateUI();
+    }
+
+    public void showDateDialog(View view) {
+        //DialogFragment dialogFragment = new TimePickerFragment();
+        //dialogFragment.show(getSupportFragmentManager(), "datePicker");
+    }
+
 }
